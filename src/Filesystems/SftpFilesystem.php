@@ -1,6 +1,7 @@
 <?php namespace BackupManager\Filesystems;
 
-use League\Flysystem\Sftp\SftpAdapter;
+use League\Flysystem\PhpseclibV3\SftpAdapter;
+use League\Flysystem\PhpseclibV3\SftpConnectionProvider;
 use League\Flysystem\Filesystem as Flysystem;
 
 /**
@@ -25,6 +26,8 @@ class SftpFilesystem implements Filesystem
      */
     public function get(array $config)
     {
-        return new Flysystem(new SftpAdapter($config));
+        $provider = SftpConnectionProvider::fromArray($config);
+        $root = $config['root'] ?? '/';
+        return new Flysystem(new SftpAdapter($provider, $root));
     }
 }
